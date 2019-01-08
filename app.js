@@ -1,4 +1,4 @@
-// Init express
+// Init express and fs
 var express = require('express');
 var app = express();
 var fs = require('fs');
@@ -29,6 +29,22 @@ app.get('/home/:data', function(req, res){
     } catch (err) {
         res.render('404');
         console.log(req.ip + " failed to access " + __dirname + "/" + req.params.data);
+    }
+});
+
+app.get('/home/:data/contact', function(req, res){
+    console.log(req.ip + " Is trying to access " + __dirname + "/" + req.params.data + "/contact");
+
+    // Catch errors
+    try {
+        // Parse JSON file
+        var json = JSON.parse(fs.readFileSync('./' + req.params.data + '.json', 'utf8'));
+        // Respond with JSON edited HTML
+        res.render('contact', {person: req.params.data, data: json});
+        console.log(req.ip + " accessed " + __dirname + "/" + req.params.data + "/contact");
+    } catch (err) {
+        res.render('404');
+        console.log(req.ip + " failed to access " + __dirname + "/" + req.params.data + "/contact");
     }
 });
 
