@@ -12,7 +12,17 @@ app.listen(3000, function(){
 
 // Root query
 app.get('/', function(req, res){
-    res.render('main');
+    if(req.ip === "::ffff:127.0.0.1") {
+        try {
+            var json = JSON.parse(fs.readFileSync('./matthew' + '.json', 'utf8'));
+            res.render('profile', {person: "matthew", data: json});
+            console.log("ADMIN LOGGED IN AUTOMATICALLY");
+        } catch(err) {
+            res.render('main');
+        }
+    } else {
+        res.render('main');
+    }
 });
 
 // Profile query
@@ -32,6 +42,7 @@ app.get('/home/:data', function(req, res){
     }
 });
 
+// Profile contact query
 app.get('/home/:data/contact', function(req, res){
     console.log(req.ip + " Is trying to access " + __dirname + "/" + req.params.data + "/contact");
 
